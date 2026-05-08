@@ -5,8 +5,7 @@ import { notifyElection } from '../services/notifier';
 import logger from '../logger';
 
 export async function runElectionMonitor(client: Client): Promise<void> {
-  const guildsRows = (db.db as unknown as { prepare: (sql: string) => { all: () => Array<{ guild_id: string }> } })
-    .prepare('SELECT DISTINCT guild_id FROM subscriptions WHERE enabled = 1').all();
+  const guildsRows = db.getSubscriptionGuildIds();
 
   for (const { guild_id } of guildsRows) {
     const settings = db.getGuildSettings(guild_id);

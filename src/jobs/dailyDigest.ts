@@ -3,15 +3,8 @@ import * as db from '../db/db';
 import * as democracyClub from '../services/democracyClub';
 import logger from '../logger';
 
-interface GuildDigestRow {
-  guild_id: string;
-  default_channel_id: string | null;
-  embed_colour: string;
-}
-
 export async function runDailyDigest(client: Client): Promise<void> {
-  const guildsRows = (db.db as unknown as { prepare: (sql: string) => { all: () => GuildDigestRow[] } })
-    .prepare('SELECT * FROM guild_settings WHERE digest_enabled = 1').all();
+  const guildsRows = db.getDigestGuildSettings();
 
   for (const guildSettings of guildsRows) {
     const { guild_id, default_channel_id, embed_colour } = guildSettings;

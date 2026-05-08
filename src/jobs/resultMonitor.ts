@@ -5,8 +5,7 @@ import { notifyResult } from '../services/notifier';
 import logger from '../logger';
 
 export async function runResultMonitor(client: Client): Promise<void> {
-  const guildsRows = (db.db as unknown as { prepare: (sql: string) => { all: (arg: string) => Array<{ guild_id: string }> } })
-    .prepare('SELECT DISTINCT guild_id FROM subscriptions WHERE enabled = 1 AND type = ?').all('results');
+  const guildsRows = db.getSubscriptionGuildIds('results');
 
   for (const { guild_id } of guildsRows) {
     const settings = db.getGuildSettings(guild_id);

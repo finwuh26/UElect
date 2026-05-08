@@ -4,13 +4,6 @@ import { isAdmin } from '../utils/permissions';
 import { createErrorEmbed } from '../utils/embeds';
 import * as cache from '../services/cache';
 
-interface AuditRow {
-  id: number;
-  created_at: string;
-  action: string;
-  user_id: string;
-}
-
 export async function execute(interaction: ChatInputCommandInteraction): Promise<void> {
   const sub = interaction.options.getSubcommand();
   const guildId = interaction.guildId!;
@@ -42,8 +35,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
 
   } else if (sub === 'audit-log') {
     const limit = interaction.options.getInteger('limit') ?? 10;
-    const rows = (db.db as unknown as { prepare: (sql: string) => { all: (guildId: string, limit: number) => AuditRow[] } })
-      .prepare('SELECT * FROM audit_log WHERE guild_id = ? ORDER BY id DESC LIMIT ?').all(guildId, limit);
+    const rows = db.getAuditLogEntries(guildId, limit);
     const embed = new EmbedBuilder()
       .setColor(color)
       .setTitle('📜 Audit Log')

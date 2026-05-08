@@ -7,6 +7,23 @@ export const db: DatabaseType = new Database(config.DATABASE_URL);
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 
+export interface GuildIdRow {
+  guild_id: string;
+}
+
+export interface GuildDigestRow {
+  guild_id: string;
+  default_channel_id: string | null;
+  embed_colour: string;
+}
+
+export interface AuditRow {
+  id: number;
+  created_at: string;
+  action: string;
+  user_id: string;
+}
+
 export function getGuild(guildId: string): unknown {
   return db.prepare('SELECT * FROM guilds WHERE guild_id = ?').get(guildId);
 }
@@ -122,4 +139,27 @@ export function addAuditLog(guildId: string, userId: string, action: string, det
     INSERT INTO audit_log (guild_id, user_id, action, details_json, created_at)
     VALUES (?, ?, ?, ?, ?)
   `).run(guildId, userId, action, details ? JSON.stringify(details) : null, now);
+}
+
+export function getSubscriptionGuildIds(type?: Subscription['type']): GuildIdRow[] {
+  if (type) {
+    return db
+      .prepare('SELECT DISTINCT guild_id FROM subscriptions WHERE enabled = 1 AND type = ?')
+      .all(type) as GuildIdRow[];
+  }
+  return db
+    .prepare('SELECT DISTINCT guild_id FROM subscriptions WHERE enabled = 1')
+    .all() as GuildIdRow[];
+}
+
+export function getDigestGuildSettings(): GuildDigestRow[] {
+  return db
+    .prepare('SELECT guild_id, default_channel_id, embed_colour FROM guild_settings WHERE digest_enabled = 1')
+    .all() as GuildDigestRow[];
+}
+
+export function getAuditLogEntries(guildId: string, limit: number): AuditRow[] {
+  return db
+    .prepare('SELECT id, created_at, action, user_id FROM audit_log WHERE guild_id = ? ORDER BY id DESC LIMIT ?')
+    .all(guildId, limit) as AuditRow[];
 }
