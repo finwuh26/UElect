@@ -36,6 +36,8 @@ const defaultSettings: GuildSettings = {
   digest_enabled: 1,
   digest_time: '09:00',
   live_results_enabled: 0,
+  candidates_alerts_enabled: 1,
+  polling_station_alerts_enabled: 1,
   civic_api_enabled: 0,
   embed_colour: '#2f80ed',
 };
