@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS guild_settings (
   digest_enabled INTEGER DEFAULT 1,
   digest_time TEXT DEFAULT '09:00',
   live_results_enabled INTEGER DEFAULT 0,
+  candidates_alerts_enabled INTEGER DEFAULT 1,
+  polling_station_alerts_enabled INTEGER DEFAULT 1,
   civic_api_enabled INTEGER DEFAULT 0,
   embed_colour TEXT DEFAULT '#2f80ed',
   FOREIGN KEY (guild_id) REFERENCES guilds(guild_id)

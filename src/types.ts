@@ -42,6 +42,8 @@ export interface GuildSettings {
   digest_enabled: number;
   digest_time: string;
   live_results_enabled: number;
+  candidates_alerts_enabled: number;
+  polling_station_alerts_enabled: number;
   civic_api_enabled: number;
   embed_colour: string;
 }

@@ -42,13 +42,15 @@ export function upsertGuildSettings(guildId: string, settings: Partial<GuildSett
       digest_enabled: 1,
       digest_time: '09:00',
       live_results_enabled: 0,
+      candidates_alerts_enabled: 1,
+      polling_station_alerts_enabled: 1,
       civic_api_enabled: 0,
       embed_colour: '#2f80ed',
       ...settings,
     };
     db.prepare(`
-      INSERT INTO guild_settings (guild_id, default_channel_id, admin_role_id, timezone, update_interval_minutes, digest_enabled, digest_time, live_results_enabled, civic_api_enabled, embed_colour)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO guild_settings (guild_id, default_channel_id, admin_role_id, timezone, update_interval_minutes, digest_enabled, digest_time, live_results_enabled, candidates_alerts_enabled, polling_station_alerts_enabled, civic_api_enabled, embed_colour)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       defaults.guild_id,
       defaults.default_channel_id,
@@ -58,6 +60,8 @@ export function upsertGuildSettings(guildId: string, settings: Partial<GuildSett
       defaults.digest_enabled,
       defaults.digest_time,
       defaults.live_results_enabled,
+      defaults.candidates_alerts_enabled,
+      defaults.polling_station_alerts_enabled,
       defaults.civic_api_enabled,
       defaults.embed_colour,
     );

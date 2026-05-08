@@ -63,8 +63,8 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
       await interaction.reply({ embeds: [createErrorEmbed('Unknown subcommand.')], ephemeral: true });
     }
   } catch (err: unknown) {
-    const error = err as { message?: string };
-    if (error?.message?.includes('UNIQUE')) {
+    const error = err as { code?: string; message?: string };
+    if (error?.code === 'SQLITE_CONSTRAINT' || error?.message?.includes('UNIQUE')) {
       await interaction.reply({ embeds: [createErrorEmbed('You already have this subscription in this channel.')], ephemeral: true });
     } else {
       throw err;
