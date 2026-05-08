@@ -46,8 +46,8 @@ export function upsertGuildSettings(guildId: string, settings: Partial<GuildSett
   if (existing) {
     const fields = Object.keys(settings).filter(k => k !== 'guild_id');
     if (fields.length === 0) return;
-    const setClause = fields.map(f => `${f} = ?`).join(', ');
-    const values: unknown[] = fields.map(f => (settings as Record<string, unknown>)[f]);
+    const setClause = fields.map(field => `${field} = ?`).join(', ');
+    const values: unknown[] = fields.map(field => (settings as Record<string, unknown>)[field]);
     db.prepare(`UPDATE guild_settings SET ${setClause} WHERE guild_id = ?`).run(...values, guildId);
   } else {
     const defaults: GuildSettings = {
@@ -110,8 +110,8 @@ export function removeSubscriptionsByFilter(guildId: string, filter: Partial<Sub
     db.prepare('UPDATE subscriptions SET enabled = 0 WHERE guild_id = ?').run(guildId);
     return;
   }
-  const whereClause = fields.map(f => `${f} = ?`).join(' AND ');
-  const values: unknown[] = fields.map(f => (filter as Record<string, unknown>)[f]);
+  const whereClause = fields.map(field => `${field} = ?`).join(' AND ');
+  const values: unknown[] = fields.map(field => (filter as Record<string, unknown>)[field]);
   db.prepare(`UPDATE subscriptions SET enabled = 0 WHERE guild_id = ? AND ${whereClause}`).run(guildId, ...values);
 }
 
